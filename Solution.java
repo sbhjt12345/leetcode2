@@ -2231,7 +2231,7 @@ import java.util.Stack;
 //    	
 //    	
 //    }
-    
+
 //    public int[] con(int[] nums1, int[] nums2){
 //        int[] con = new int[nums1.length+nums2.length];
 //        for (int i=0;i<nums1.length;i++){
@@ -2243,11 +2243,6 @@ import java.util.Stack;
 //        return con;
 //    }
 //}
-
-
-
-
-
 
 //public class Solution {
 //    public List<Integer> countSmaller(int[] nums) {
@@ -2291,7 +2286,6 @@ import java.util.Stack;
 //    	System.out.println(A.countSmaller(nums));
 //    }
 //}
-
 
 //public class Solution {
 //    public List<Integer> findSubstring(String s, String[] words) {
@@ -2496,21 +2490,76 @@ import java.util.Stack;
 //    }
 //}
 
-
-public class Solution{
-	public int maxRec(int[] his){
+public class Solution {
+	public int maxRec(int[] his) {
 		Stack<Integer> stack = new Stack<>();
 		int maxarea = Integer.MIN_VALUE;
-		for (int i=0;i<=his.length;i++){
-			int curhei = i!=his.length?his[i]:0;
-			//int prehei = stack.peek();
-			if (stack.isEmpty() || his[stack.peek()]<=curhei) stack.push(i);
-			else{
+		for (int i = 0; i <= his.length; i++) {
+			int curhei = i != his.length ? his[i] : 0;
+			// int prehei = stack.peek();
+			if (stack.isEmpty() || his[stack.peek()] <= curhei)
+				stack.push(i);
+			else {
 				int tp = stack.pop();
-				maxarea = Math.max(maxarea, his[tp]*(stack.isEmpty()?i:i-stack.peek()-1));
+				maxarea = Math.max(maxarea, his[tp] * (stack.isEmpty() ? i : i - stack.peek() - 1));
 				i--;
 			}
 		}
-		return maxarea;	
+		return maxarea;
 	}
+}
+
+public class Solution {
+    List<String> targetList = new ArrayList<>();
+    
+    public String minAbbreviation(String target, String[] dictionary) {
+        generateAbbr(target,targetList,0,0,"");
+        PriorityQueue<String> pq = new PriorityQueue<>(new Comparator<String>(){
+           public int compare(String s1, String s2){
+               return s1.length() - s2.length();
+           } 
+        });
+        
+        for (String tmp : targetList) pq.offer(tmp);
+        while (!pq.isEmpty()){
+            String tmp = pq.poll();
+            boolean good = true;
+            for (String haha : dictionary){
+                if (isAbbr(tmp,haha)) {
+                    good = false;
+                    break;
+                }
+            }
+            if (good) return tmp;
+        }
+        return "";
+    }
+    
+    public void generateAbbr(String target,List<String> targetList,int pos, int count,String cur){
+        if (pos == target.length()){
+            if (count>0) cur += count;
+            targetList.add(cur);
+        }
+        else{
+            generateAbbr(target,targetList,pos+1,count+1,cur);
+            generateAbbr(target,targetList,pos+1,0,cur+(count>0?count:"")+target.charAt(pos));
+        }
+    }
+    
+    public boolean isAbbr(String abbr, String word){
+        int i=0,j=0;
+        char[] words = word.toCharArray();
+        char[] abbrs = abbr.toCharArray();
+        while (i<words.length && j<abbrs.length){
+            if (words[i] == abbrs[j]){
+                i++;j++;
+                continue;
+            }
+            if (abbrs[j]<'0' || abbrs[j]>'9') return false;
+            int start = j;
+            while (j<abbrs.length && abbrs[j]>='0' && abbrs[j]<='9') j++;
+            i += Integer.parseInt(abbr.substring(start,j));
+        }
+        return i==words.length && j==abbrs.length;
+    }
 }
