@@ -13,6 +13,14 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.Stack;
 
+public class Solution {    
+	public int findMinArrowShots(int[][] points) {        if(points==null || points.length==0) return 0;  // forget        
+	Arrays.sort(points,new Comparator<int[]>(){   //Arrays not Collections           
+		public int compare(int[] A, int[] B){                
+			if (A[0]==B[0]) return A[1] - B[1];               
+			else return A[0] - B[0];            }        });                
+        int minend = points[0][1];           int res = 1;        for (int i=1;i<points.length;i++){            if (points[i][0]>minend) {                res++;                minend = points[i][1];   //forget to renew            }            else {                if (points[i][1]<=minend) minend = points[i][1];            }        }        return res;            }}
+
 //
 //import java.util.*;
 //import java.util.Map.Entry;
