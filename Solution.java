@@ -1,25 +1,5 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Queue;
-import java.util.Scanner;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 
-public class Solution {    
-	public int findMinArrowShots(int[][] points) {        if(points==null || points.length==0) return 0;  // forget        
-	Arrays.sort(points,new Comparator<int[]>(){   //Arrays not Collections           
-		public int compare(int[] A, int[] B){                
-			if (A[0]==B[0]) return A[1] - B[1];               
-			else return A[0] - B[0];            }        });                
-        int minend = points[0][1];           int res = 1;        for (int i=1;i<points.length;i++){            if (points[i][0]>minend) {                res++;                minend = points[i][1];   //forget to renew            }            else {                if (points[i][1]<=minend) minend = points[i][1];            }        }        return res;            }}
 
 //
 //import java.util.*;
@@ -2498,76 +2478,120 @@ public class Solution {   
 //    }
 //}
 
-public class Solution {
-	public int maxRec(int[] his) {
-		Stack<Integer> stack = new Stack<>();
-		int maxarea = Integer.MIN_VALUE;
-		for (int i = 0; i <= his.length; i++) {
-			int curhei = i != his.length ? his[i] : 0;
-			// int prehei = stack.peek();
-			if (stack.isEmpty() || his[stack.peek()] <= curhei)
-				stack.push(i);
-			else {
-				int tp = stack.pop();
-				maxarea = Math.max(maxarea, his[tp] * (stack.isEmpty() ? i : i - stack.peek() - 1));
-				i--;
-			}
-		}
-		return maxarea;
-	}
-}
+//public class Solution {
+//	public int maxRec(int[] his) {
+//		Stack<Integer> stack = new Stack<>();
+//		int maxarea = Integer.MIN_VALUE;
+//		for (int i = 0; i <= his.length; i++) {
+//			int curhei = i != his.length ? his[i] : 0;
+//			// int prehei = stack.peek();
+//			if (stack.isEmpty() || his[stack.peek()] <= curhei)
+//				stack.push(i);
+//			else {
+//				int tp = stack.pop();
+//				maxarea = Math.max(maxarea, his[tp] * (stack.isEmpty() ? i : i - stack.peek() - 1));
+//				i--;
+//			}
+//		}
+//		return maxarea;
+//	}
+//}
+//
+//public class Solution {
+//    List<String> targetList = new ArrayList<>();
+//    
+//    public String minAbbreviation(String target, String[] dictionary) {
+//        generateAbbr(target,targetList,0,0,"");
+//        PriorityQueue<String> pq = new PriorityQueue<>(new Comparator<String>(){
+//           public int compare(String s1, String s2){
+//               return s1.length() - s2.length();
+//           } 
+//        });
+//        
+//        for (String tmp : targetList) pq.offer(tmp);
+//        while (!pq.isEmpty()){
+//            String tmp = pq.poll();
+//            boolean good = true;
+//            for (String haha : dictionary){
+//                if (isAbbr(tmp,haha)) {
+//                    good = false;
+//                    break;
+//                }
+//            }
+//            if (good) return tmp;
+//        }
+//        return "";
+//    }
+//    
+//    public void generateAbbr(String target,List<String> targetList,int pos, int count,String cur){
+//        if (pos == target.length()){
+//            if (count>0) cur += count;
+//            targetList.add(cur);
+//        }
+//        else{
+//            generateAbbr(target,targetList,pos+1,count+1,cur);
+//            generateAbbr(target,targetList,pos+1,0,cur+(count>0?count:"")+target.charAt(pos));
+//        }
+//    }
+//    
+//    public boolean isAbbr(String abbr, String word){
+//        int i=0,j=0;
+//        char[] words = word.toCharArray();
+//        char[] abbrs = abbr.toCharArray();
+//        while (i<words.length && j<abbrs.length){
+//            if (words[i] == abbrs[j]){
+//                i++;j++;
+//                continue;
+//            }
+//            if (abbrs[j]<'0' || abbrs[j]>'9') return false;
+//            int start = j;
+//            while (j<abbrs.length && abbrs[j]>='0' && abbrs[j]<='9') j++;
+//            i += Integer.parseInt(abbr.substring(start,j));
+//        }
+//        return i==words.length && j==abbrs.length;
+//    }
+//}
 
 public class Solution {
-    List<String> targetList = new ArrayList<>();
-    
-    public String minAbbreviation(String target, String[] dictionary) {
-        generateAbbr(target,targetList,0,0,"");
-        PriorityQueue<String> pq = new PriorityQueue<>(new Comparator<String>(){
-           public int compare(String s1, String s2){
-               return s1.length() - s2.length();
-           } 
-        });
-        
-        for (String tmp : targetList) pq.offer(tmp);
-        while (!pq.isEmpty()){
-            String tmp = pq.poll();
-            boolean good = true;
-            for (String haha : dictionary){
-                if (isAbbr(tmp,haha)) {
-                    good = false;
-                    break;
-                }
-            }
-            if (good) return tmp;
-        }
-        return "";
-    }
-    
-    public void generateAbbr(String target,List<String> targetList,int pos, int count,String cur){
-        if (pos == target.length()){
-            if (count>0) cur += count;
-            targetList.add(cur);
-        }
-        else{
-            generateAbbr(target,targetList,pos+1,count+1,cur);
-            generateAbbr(target,targetList,pos+1,0,cur+(count>0?count:"")+target.charAt(pos));
-        }
-    }
-    
-    public boolean isAbbr(String abbr, String word){
-        int i=0,j=0;
-        char[] words = word.toCharArray();
-        char[] abbrs = abbr.toCharArray();
-        while (i<words.length && j<abbrs.length){
-            if (words[i] == abbrs[j]){
-                i++;j++;
-                continue;
-            }
-            if (abbrs[j]<'0' || abbrs[j]>'9') return false;
-            int start = j;
-            while (j<abbrs.length && abbrs[j]>='0' && abbrs[j]<='9') j++;
-            i += Integer.parseInt(abbr.substring(start,j));
-        }
-        return i==words.length && j==abbrs.length;
-    }
+	public String alienOrder(String[] words) {
+		if (words==null || words.length==0) return "";
+		//words are sorted, not word
+		Map<Character,Set<Character>> map = new HashMap<>();
+		Map<Character,Integer> indegree = new HashMap<>();
+		for (int i=0;i<words.length-1;i++){
+			int len = Math.min(words[i].length(),words[i+1].length());
+			for (int j=0;j<len;j++){
+				if (!map.containsKey(words[i].charAt(j))) {
+					map.put(words[i].charAt(j),new HashSet<>());
+					indegree.put(words[i].charAt(j),0);
+				}
+				if (!map.containsKey(words[i+1].charAt(j))) {
+					map.put(words[i+1].charAt(j),new HashSet<>());
+					indegree.put(words[i+1].charAt(j),0);
+				}
+				if (words[i].charAt(j) != words[i+1].charAt(j)){
+					if (map.get(words[i].charAt(j)).add(words[i+1].charAt(j))){
+						indegree.put(words[i+1].charAt(0),indegree.get(words[i+1].charAt(0))+1);
+					}
+				}
+			}
+		}
+		StringBuilder sb = new StringBuilder();
+		Queue<Character> queue = new LinkedList<>();
+		for (char x : indegree.keySet()){
+			if (indegree.get(x) == 0) {
+				queue.offer(x);
+				break;
+			}
+		}
+		while (!queue.isEmpty()){
+			char tmp = queue.poll();
+			sb.append(tmp+"");
+			for (char c : map.get(tmp)){
+				indegree.put(c,indegree.get(c)-1);
+				if (indegree.get(c)==0) queue.offer(c);
+			}
+		}
+		return sb.toString();
+	}
 }
