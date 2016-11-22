@@ -115,3 +115,53 @@ public class Solution {
         return true;
     }
 }
+
+
+------------------------------------------------------------------------------------------
+Valid Squares TLE
+
+public class Solution {
+    public List<List<String>> wordSquares(String[] words) {
+        List<List<String>> res = new ArrayList<>();
+        int n = words[0].length();
+      //  char[][] board = new char[n][n];
+        List<String> lres = new ArrayList<>();
+        helper(res,n,words,lres);
+        return res;
+    }
+    
+    public void helper(List<List<String>> res, int n, String[] words, List<String> lres){
+        if (lres.size()==n) {
+        //    System.out.println("bingo");
+            res.add(new ArrayList<>(lres));
+            return;
+        }
+        for (int i=0;i<words.length;i++){
+         //   System.out.println(lres);
+            if (valid(words[i],lres)){
+                lres.add(words[i]);
+                helper(res,n,words,lres);
+                lres.remove(lres.size()-1);
+            }
+        }
+    }
+    
+    public boolean valid(String newWord, List<String> lres){
+        if (lres.size()==0) return true;
+        lres.add(newWord);
+        int size = lres.size();
+        StringBuilder sb = new StringBuilder();
+        for (int i=0;i<size;i++){
+            sb.append(lres.get(i).toCharArray()[size-1]+"");
+        }
+        lres.remove(lres.size()-1);
+      //  System.out.println("--------------");
+      //  System.out.println(sb.toString());
+      //  System.out.println("newword is " + newWord);
+      //  System.out.println(newWord.substring(0,size));
+      //  System.out.println("--------------");
+        
+        if (newWord.substring(0,size).equals(sb.toString())) return true;
+        return false;
+    }
+}
