@@ -2552,46 +2552,77 @@ import java.util.*;
 //    }
 //}
 
+//public class Solution {
+//	public String alienOrder(String[] words) {
+//		if (words==null || words.length==0) return "";
+//		//words are sorted, not word
+//		Map<Character,Set<Character>> map = new HashMap<>();
+//		Map<Character,Integer> indegree = new HashMap<>();
+//		for (int i=0;i<words.length-1;i++){
+//			int len = Math.min(words[i].length(),words[i+1].length());
+//			for (int j=0;j<len;j++){
+//				if (!map.containsKey(words[i].charAt(j))) {
+//					map.put(words[i].charAt(j),new HashSet<>());
+//					indegree.put(words[i].charAt(j),0);
+//				}
+//				if (!map.containsKey(words[i+1].charAt(j))) {
+//					map.put(words[i+1].charAt(j),new HashSet<>());
+//					indegree.put(words[i+1].charAt(j),0);
+//				}
+//				if (words[i].charAt(j) != words[i+1].charAt(j)){
+//					if (map.get(words[i].charAt(j)).add(words[i+1].charAt(j))){
+//						indegree.put(words[i+1].charAt(0),indegree.get(words[i+1].charAt(0))+1);
+//					}
+//				}
+//			}
+//		}
+//		StringBuilder sb = new StringBuilder();
+//		Queue<Character> queue = new LinkedList<>();
+//		for (char x : indegree.keySet()){
+//			if (indegree.get(x) == 0) {
+//				queue.offer(x);
+//				break;
+//			}
+//		}
+//		while (!queue.isEmpty()){
+//			char tmp = queue.poll();
+//			sb.append(tmp+"");
+//			for (char c : map.get(tmp)){
+//				indegree.put(c,indegree.get(c)-1);
+//				if (indegree.get(c)==0) queue.offer(c);
+//			}
+//		}
+//		return sb.toString();
+//	}
+//}
+
+
+
 public class Solution {
-	public String alienOrder(String[] words) {
-		if (words==null || words.length==0) return "";
-		//words are sorted, not word
-		Map<Character,Set<Character>> map = new HashMap<>();
-		Map<Character,Integer> indegree = new HashMap<>();
-		for (int i=0;i<words.length-1;i++){
-			int len = Math.min(words[i].length(),words[i+1].length());
-			for (int j=0;j<len;j++){
-				if (!map.containsKey(words[i].charAt(j))) {
-					map.put(words[i].charAt(j),new HashSet<>());
-					indegree.put(words[i].charAt(j),0);
-				}
-				if (!map.containsKey(words[i+1].charAt(j))) {
-					map.put(words[i+1].charAt(j),new HashSet<>());
-					indegree.put(words[i+1].charAt(j),0);
-				}
-				if (words[i].charAt(j) != words[i+1].charAt(j)){
-					if (map.get(words[i].charAt(j)).add(words[i+1].charAt(j))){
-						indegree.put(words[i+1].charAt(0),indegree.get(words[i+1].charAt(0))+1);
-					}
-				}
-			}
-		}
-		StringBuilder sb = new StringBuilder();
-		Queue<Character> queue = new LinkedList<>();
-		for (char x : indegree.keySet()){
-			if (indegree.get(x) == 0) {
-				queue.offer(x);
-				break;
-			}
-		}
-		while (!queue.isEmpty()){
-			char tmp = queue.poll();
-			sb.append(tmp+"");
-			for (char c : map.get(tmp)){
-				indegree.put(c,indegree.get(c)-1);
-				if (indegree.get(c)==0) queue.offer(c);
-			}
-		}
-		return sb.toString();
-	}
+    public boolean canIWin(int mc, int desiredTotal) {
+        int max = mc*(mc-1);
+        if (max<desiredTotal) return false;
+        if (desiredTotal<=0) return true;
+        Map<String,boolean> map = new HashMap<>();
+        return helper(new int[mc+1],desiredTotal,new HashMap<>());
+    }
+    
+    public boolean helper(int[] used, int goal, Map<String,boolean> map){
+        if (goal<=0) return true;
+        String curr = Arrays.toString(used);
+        if (map.containsKey(curr)) return map.get(curr);
+        for (int i=1;i<used.length;i++){
+            if (used[i]==0){
+                used[i] = 1;
+                if (!helper(used,goal-i,map)) {
+                    map.put(curr,true);
+                    used[i] = 0;
+                    return true;
+                }
+                used[i] = 0;
+            }
+        }
+        map.put(curr,false);
+        return false;
+    }
 }
