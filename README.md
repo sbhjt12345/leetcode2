@@ -73,3 +73,95 @@ public class Solution {
         }
     }
 }
+
+//Sudoku Solver : remember the indian: build the tree;
+
+public class Solution {
+    public void solveSudoku(char[][] board) {
+        if (board==null || board.length==0) return;
+        helper(board);
+    }
+    
+    public boolean helper(char[][] board){
+        for (int i=0;i<board.length;i++){
+            for (int j=0;j<board[0].length;j++){
+                if (board[i][j]=='.'){
+                    for (char c = '1';c<='9';c++){
+                        if (valid(c,board,i,j)){
+                            board[i][j] = c;
+                            if (helper(board)) return true;
+                            else board[i][j] = '.';
+                        }
+                    }
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    public boolean valid(char c, char[][] board, int i, int j){
+        for (int x =0;x<board[0].length;x++){
+            if (x!=j && board[i][x]==c) return false;
+        }
+        for (int x=0;x<board.length;x++){
+            if (x!=i && board[x][j]==c) return false;
+        }
+        for (int a=i/3*3;a<i/3*3+3;a++){
+            for (int b=j/3*3;b<j/3*3+3;b++){
+                if ((!(a==i&&b==j)) &&board[a][b]==c) return false; 
+            }
+        }
+        return true;
+    }
+}
+
+
+------------------------------------------------------------------------------------------
+Valid Squares TLE
+
+public class Solution {
+    public List<List<String>> wordSquares(String[] words) {
+        List<List<String>> res = new ArrayList<>();
+        int n = words[0].length();
+      //  char[][] board = new char[n][n];
+        List<String> lres = new ArrayList<>();
+        helper(res,n,words,lres);
+        return res;
+    }
+    
+    public void helper(List<List<String>> res, int n, String[] words, List<String> lres){
+        if (lres.size()==n) {
+        //    System.out.println("bingo");
+            res.add(new ArrayList<>(lres));
+            return;
+        }
+        for (int i=0;i<words.length;i++){
+         //   System.out.println(lres);
+            if (valid(words[i],lres)){
+                lres.add(words[i]);
+                helper(res,n,words,lres);
+                lres.remove(lres.size()-1);
+            }
+        }
+    }
+    
+    public boolean valid(String newWord, List<String> lres){
+        if (lres.size()==0) return true;
+        lres.add(newWord);
+        int size = lres.size();
+        StringBuilder sb = new StringBuilder();
+        for (int i=0;i<size;i++){
+            sb.append(lres.get(i).toCharArray()[size-1]+"");
+        }
+        lres.remove(lres.size()-1);
+      //  System.out.println("--------------");
+      //  System.out.println(sb.toString());
+      //  System.out.println("newword is " + newWord);
+      //  System.out.println(newWord.substring(0,size));
+      //  System.out.println("--------------");
+        
+        if (newWord.substring(0,size).equals(sb.toString())) return true;
+        return false;
+    }
+}
