@@ -165,3 +165,82 @@ public class Solution {
         return false;
     }
 }
+
+-------------------------------------------------------------------------------------------------------
+public class Solution {
+    class tuple{
+        int num, level;
+        public tuple(int num, int level){
+            this.num = num;
+            this.level = level;
+        }
+    }
+    
+    public int calculate(String s) {
+        if (s==null || s.length()==0) return 0;
+        if (s.length()==1) return Integer.valueOf(s);
+        Stack<tuple> stack = new Stack<>();
+        Stack<Character> operator = new Stack<>();
+        int l = 0;
+        int level = 0;
+        for (int r= 0;r<s.length();r++){
+            char c = s.charAt(r);
+            if (c=='+' || c=='-'){
+                if (s.charAt(r-1) != '(' && s.charAt(r-1) != ')'){
+                    int num = Integer.valueOf(s.substring(l,r));
+                    if (stack.isEmpty()) {
+                        stack.push(new tuple(num,level));
+                        operator.push(c);
+                    }
+                    else {
+                        if (stack.peek().level==level){
+                            int tmp = domath(stack.pop().num,num,c);
+                            stack.push(new tuple(tmp,level));
+                        }
+                        else {
+                            stack.push(new tuple(num,level));
+                            operator.push(c);
+                        }
+                    }
+                }
+                else operator.push(c);
+                l=r+1;
+            }
+            else if (c=='('){
+                level++;
+                l=r+1;
+            }
+            else if (c==')'){
+                int num = Integer.valueOf(s.substring(l,r));
+                int tmp = domath(stack.pop().num,num,operator.pop());
+                level--;
+                if (!stack.isEmpty() && stack.peek().level == level){
+                    int tmp2 = domath(stack.pop().num,tmp,operator.pop());
+                    stack.push(new tuple(tmp2,level));
+                }
+                else stack.push(new tuple(tmp,level));
+                //System.out.println("tmp is " + tmp);
+                //System.out.println(stack.size()+", and operator still has " + operator.size());
+                if (r==s.length()-1){
+                    int b = stack.pop().num;
+                    if (operator.isEmpty()) return b;
+                    else return domath(stack.pop().num,b,operator.pop());
+                }
+            }
+            else{
+                if (r==s.length()-1){
+                    int num = Integer.valueOf(s.substring(l));
+                    if (stack.isEmpty()) return num;                 //forget to consider when it is totally a number
+                    else return domath(stack.pop().num,num,operator.pop());
+                }
+            }
+    }
+    return stack.pop().num;   // forget add ".num"
+}
+
+    public int domath(int a, int b, char ope){
+        if (ope=='+') return a+b;
+        else return a-b;
+    }
+}
+-----------------------------------------------------------------------------------------------------------------------
