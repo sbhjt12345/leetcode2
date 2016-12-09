@@ -244,3 +244,43 @@ public class Solution {
     }
 }
 -----------------------------------------------------------------------------------------------------------------------
+
+
+public class Solution {
+    public int calculate(String str) {
+        Stack<Integer> s = new Stack<>();
+        Stack<Character> t = new Stack<>();
+        int num = 0;
+        for (int i=0;i<str.length();i++){
+            if (str.charAt(i)=='*' || str.charAt(i)=='-' || str.charAt(i)=='/' || str.charAt(i)=='+') {
+                t.push(str.charAt(i));
+            }
+            else {
+               while  (i<str.length() && (str.charAt(i) == ' ' || Character.isDigit(str.charAt(i)))) {
+                    if (Character.isDigit(str.charAt(i))) num = num*10 + (str.charAt(i)-'0');
+                    i++;
+                   }
+                    if (s.isEmpty() || (!t.isEmpty() && (t.peek()=='+' || t.peek()=='-'))) {
+                        s.push(num);
+                    }
+                    else{
+                        if (!t.isEmpty() &&(t.peek()=='*' || t.peek()=='/')){
+                            int tmp = s.pop();
+                            s.push(t.pop()=='*'?tmp*num:tmp/num);
+                        }
+                    }
+                    num = 0;
+                    i--;
+                }
+        }
+        int res = 0;
+        //if (s.isEmpty()) return 0;
+        while (!t.isEmpty()){
+            char mm = t.pop();
+            res += (mm=='+')?s.pop():s.pop()*(-1);
+        }
+        res += s.pop();
+        return res;
+    }
+}
+--------------------------------------------------------------------------------------------------------------------------------
